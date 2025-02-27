@@ -1,16 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Access</title>
 </head>
 
 <body>
-  Hello world
-  <script src="script.js"></script>
+    <h1>Spejder Gemmeleg</h1>
+    <input type="text" id="codeInput" placeholder="Indsæt kode">
+    <button onclick="checkCode()">Det her er en knap</button>
+    <p id="result"></p>
+
+    <script>
+        async function checkCode() {
+            const code = document.getElementById("codeInput").value.toLowerCase(); // Convert input to lowercase
+            const resultElement = document.getElementById("result");
+
+            try {
+                // Fetch the JSON file
+                const response = await fetch('codes.json');
+                const codes = await response.json();
+
+                // Convert all keys in the JSON to lowercase for case-insensitive comparison
+                const lowerCaseCodes = Object.fromEntries(
+                    Object.entries(codes).map(([key, value]) => [key.toLowerCase(), value])
+                );
+
+                // Check if the code exists in the JSON
+                if (lowerCaseCodes[code]) {
+                    resultElement.textContent = lowerCaseCodes[code];
+                } else {
+                    resultElement.textContent = "Forkert kode. Prøv igen.";
+                }
+            } catch (error) {
+                resultElement.textContent = "An error occurred. Please try again later.";
+                console.error('Error fetching the codes:', error);
+            }
+        }
+    </script>
 </body>
 
 </html>
